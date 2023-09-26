@@ -1,4 +1,4 @@
-package com.kharido.service;
+package com.kharido.service.impl;
 
 import com.kharido.constant.JwtConstant;
 import io.jsonwebtoken.Claims;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JwtServiceImpl {
 
     public static final String SECRET = JwtConstant.SECRET_KEY;
     public String generateToken(String userName) {

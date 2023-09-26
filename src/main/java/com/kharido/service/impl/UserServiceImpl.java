@@ -1,8 +1,9 @@
-package com.kharido.service;
+package com.kharido.service.impl;
 
 import com.kharido.entity.User;
 import com.kharido.exception.UserAlreadyExistsException;
 import com.kharido.repository.UserRepository;
+import com.kharido.service.impl.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserInfoService implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -24,7 +25,7 @@ public class UserInfoService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
-        return user.map(UserInfoDetails::new).orElseThrow(()->new UsernameNotFoundException("User not found " + username));
+        return user.map(UserDetailsImpl::new).orElseThrow(()->new UsernameNotFoundException("User not found " + username));
     }
 
     public User addUser(User user) {

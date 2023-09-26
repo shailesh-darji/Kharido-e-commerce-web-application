@@ -1,4 +1,4 @@
-package com.kharido.service;
+package com.kharido.service.impl;
 
 import com.kharido.entity.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,14 +10,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UserInfoDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private String email;
     private String password;
 
     private List<GrantedAuthority> authorities;
 
-    public UserInfoDetails(User user){
+    public UserDetailsImpl(User user){
         email = user.getEmail();
         password = user.getPassword();
         authorities = Arrays.stream(user.getRole().split(","))

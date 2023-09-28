@@ -5,9 +5,8 @@ import com.kharido.entity.User;
 import com.kharido.mapper.UserMapper;
 import com.kharido.request.AuthRequest;
 import com.kharido.response.AuthResponse;
-import com.kharido.service.JwtService;
-import com.kharido.service.UserInfoService;
-import jdk.jshell.spi.ExecutionControl;
+import com.kharido.service.impl.JwtServiceImpl;
+import com.kharido.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +27,10 @@ public class AuthController {
     UserMapper userMapper;
 
     @Autowired
-    UserInfoService userInfoService;
+    UserServiceImpl userServiceImpl;
 
     @Autowired
-    JwtService jwtService;
+    JwtServiceImpl jwtServiceImpl;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -39,8 +38,8 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody UserDto userDto) throws UsernameNotFoundException {
         User user = userMapper.userDtoToUser(userDto);
-        userInfoService.addUser(user);
-        String token = jwtService.generateToken(user.getEmail());
+        userServiceImpl.addUser(user);
+        String token = jwtServiceImpl.generateToken(user.getEmail());
         AuthResponse authResponse = new AuthResponse(token, "User Added Successfully");
         return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
     }
@@ -49,7 +48,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> loginUserHandler(@RequestBody AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            String token = jwtService.generateToken(authRequest.getEmail());
+            String token = jwtServiceImpl.generateToken(authRequest.getEmail());
             AuthResponse authResponse = new AuthResponse(token, "Successfully Signin");
             return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.OK);
         } else {

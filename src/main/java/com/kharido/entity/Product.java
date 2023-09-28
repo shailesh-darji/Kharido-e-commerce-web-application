@@ -2,6 +2,7 @@ package com.kharido.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Product {
 
     @Id
@@ -31,6 +33,9 @@ public class Product {
 
     @Column(name = "discounted_price")
     private int discountedPrice;
+
+    @Column(name = "discount_percentage")
+    private int discountPercentage;
 
     @Column(name = "quantity")
     private int quantity;

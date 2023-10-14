@@ -5,6 +5,7 @@ import com.kharido.entity.User;
 import com.kharido.mapper.UserMapper;
 import com.kharido.request.AuthRequest;
 import com.kharido.response.AuthResponse;
+import com.kharido.service.CartService;
 import com.kharido.service.impl.JwtServiceImpl;
 import com.kharido.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -28,6 +31,9 @@ public class AuthController {
 
     @Autowired
     UserServiceImpl userServiceImpl;
+    
+    @Autowired
+    CartService cartService;
 
     @Autowired
     JwtServiceImpl jwtServiceImpl;
@@ -38,7 +44,9 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody UserDto userDto) throws UsernameNotFoundException {
         User user = userMapper.userDtoToUser(userDto);
-        userServiceImpl.addUser(user);
+        user.setCreatedAt(LocalDateTime.now());
+        User savedUser = userServiceImpl.addUser(user);
+        cartService.createCart(savedUser);
         String token = jwtServiceImpl.generateToken(user.getEmail());
         AuthResponse authResponse = new AuthResponse(token, "User Added Successfully");
         return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.CREATED);
